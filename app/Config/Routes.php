@@ -7,3 +7,4 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 $routes->get('/student', 'Home::studentView');
+$routes->get('/register', 'Home::registerUser');

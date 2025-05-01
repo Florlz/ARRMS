@@ -13,4 +13,9 @@ class Home extends BaseController
     {
         return view('student_dashboard');
     }
+
+    public function registerUser(): string
+    {
+        return view('register_user');
+    }
 }
