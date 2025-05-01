@@ -39,7 +39,6 @@
       position: relative;
       box-sizing: border-box;
     }
-    /* Simulate the small lock icon on the window */
     .header-icon::before {
       content: '';
       position: absolute;
@@ -153,7 +152,6 @@
   <div class="container">
     <div class="header">
       <div class="header-icon">
-        <!-- Simulated window icon, you may replace with an actual image if you want -->
         <span style="font-size: 28px; margin-left: 18px; margin-top: 8px;">🗔</span>
       </div>
       <span class="header-title">APPLY</span>
@@ -171,13 +169,13 @@
         <div class="form-group">
           <label for="college">College</label>
           <select id="college" name="college">
-          <option>College of Engineering and Architecture</option>
-          <option>College of Arts and Sciences</option>
-          <option>College of Business and Management</option>
-          <option>College of Computer Studies</option>
-          <option>College of Business Management </option>
-          <option>College of Technological and Developmental Education </option>
-          <option>College of Health and Sciences</option>
+            <option>College of Engineering and Architecture</option>
+            <option>College of Arts and Sciences</option>
+            <option>College of Business and Management</option>
+            <option>College of Computer Studies</option>
+            <option>College of Business Management</option>
+            <option>College of Technological and Developmental Education</option>
+            <option>College of Health and Sciences</option>
           </select>
         </div>
       </div>
@@ -232,7 +230,9 @@
           <label for="admission">Type of Admission</label>
           <input type="text" id="admission" name="admission">
         </div>
-        <div class="form-group"></div>
+        <div class="form-group">
+          <!-- Placeholder for alignment -->
+        </div>
       </div>
       <div class="register-btn-row">
         <button type="submit" class="register-btn">
