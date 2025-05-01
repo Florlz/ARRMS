@@ -18,4 +18,10 @@ class Home extends BaseController
     {
         return view('register_user');
     }
+
+    public function forgotRegister()
+    {
+    return view('forgot_register');
+    }
+
 }
