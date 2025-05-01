@@ -50,6 +50,7 @@
     }
     .form-row {
       display: flex;
+      flex-wrap: wrap;
       gap: 18px;
       margin-bottom: 18px;
     }
@@ -57,6 +58,7 @@
       flex: 1;
       display: flex;
       flex-direction: column;
+      min-width: 200px;
     }
     label {
       font-weight: 600;
@@ -127,7 +129,7 @@
 <body>
   <div class="container">
     <div class="header">
-      <div class="header-icon">🗂️</div>
+      <div class="header-icon">🔑</div>
       <span class="header-title">Forgot ID Number</span>
     </div>
     <form autocomplete="off">
@@ -143,13 +145,13 @@
         <div class="form-group">
           <label for="college">College</label>
           <select id="college" name="college">
-          <option>College of Engineering and Architecture</option>
-          <option>College of Arts and Sciences</option>
-          <option>College of Business and Management</option>
-          <option>College of Computer Studies</option>
-          <option>College of Business Management </option>
-          <option>College of Technological and Developmental Education </option>
-          <option>College of Health and Sciences</option>
+            <option>College of Engineering and Architecture</option>
+            <option>College of Arts and Sciences</option>
+            <option>College of Business and Management</option>
+            <option>College of Computer Studies</option>
+            <option>College of Business Management</option>
+            <option>College of Technological and Developmental Education</option>
+            <option>College of Health and Sciences</option>
           </select>
         </div>
       </div>
@@ -170,7 +172,7 @@
       <div class="form-row">
         <div class="form-group">
           <label for="bdate">Birthdate</label>
-          <input type="date" id="bdate" name="bdate">
+          <input type="date" id="bdate" name="bdate" value="2004-05-13">
         </div>
         <div class="form-group">
           <label for="bplace">Birthplace</label>
@@ -197,7 +199,7 @@
       </div>
       <div class="register-btn-row">
         <button type="submit" class="register-btn">
-          <span class="register-icon">&#x21B5;</span> Register
+          <span class="register-icon">&#x27A1;</span> Register
         </button>
       </div>
     </form>

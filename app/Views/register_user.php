@@ -39,27 +39,6 @@
       position: relative;
       box-sizing: border-box;
     }
-    .header-icon::before {
-      content: '';
-      position: absolute;
-      left: 8px;
-      top: 8px;
-      width: 10px;
-      height: 14px;
-      background: #ffe082;
-      border-radius: 2px;
-      border: 1.5px solid #bdbdbd;
-    }
-    .header-icon::after {
-      content: '';
-      position: absolute;
-      left: 11px;
-      top: 17px;
-      width: 4px;
-      height: 4px;
-      background: #ffb300;
-      border-radius: 50%;
-    }
     .header-title {
       font-size: 2em;
       font-weight: bold;
@@ -71,18 +50,19 @@
     }
     .form-row {
       display: flex;
-      flex-direction: row;
-      gap: 18px;
-      margin-bottom: 18px;
+      flex-wrap: wrap;
+      gap: 24px; /* Increased gap between form groups */
+      margin-bottom: 24px; /* Increased margin between rows */
     }
     .form-group {
       flex: 1;
       display: flex;
       flex-direction: column;
+      min-width: 200px;
     }
     label {
       font-weight: 600;
-      margin-bottom: 4px;
+      margin-bottom: 6px; /* Slightly increased spacing below labels */
       font-size: 1em;
       color: #fff;
     }
@@ -111,7 +91,7 @@
     .register-btn-row {
       display: flex;
       justify-content: flex-end;
-      margin-top: 16px;
+      margin-top: 24px; /* Increased spacing above the button row */
     }
     .register-btn {
       background: #120b24;
@@ -134,7 +114,6 @@
     }
     .register-icon {
       font-size: 1.2em;
-      margin-right: 2px;
     }
     @media (max-width: 950px) {
       .container {
@@ -143,7 +122,7 @@
       }
       .form-row {
         flex-direction: column;
-        gap: 0;
+        gap: 16px; /* Adjusted gap for smaller screens */
       }
     }
   </style>
@@ -151,9 +130,7 @@
 <body>
   <div class="container">
     <div class="header">
-      <div class="header-icon">
-        <span style="font-size: 28px; margin-left: 18px; margin-top: 8px;">🗔</span>
-      </div>
+      <div class="header-icon">🗔</div>
       <span class="header-title">APPLY</span>
     </div>
     <form autocomplete="off">
@@ -217,26 +194,13 @@
           <input type="text" id="street" name="street">
         </div>
         <div class="form-group">
-          <label for="municipality">Municipality</label>
-          <input type="text" id="municipality" name="municipality">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
           <label for="zipcode">Zip Code</label>
           <input type="text" id="zipcode" name="zipcode">
-        </div>
-        <div class="form-group">
-          <label for="admission">Type of Admission</label>
-          <input type="text" id="admission" name="admission">
-        </div>
-        <div class="form-group">
-          <!-- Placeholder for alignment -->
         </div>
       </div>
       <div class="register-btn-row">
         <button type="submit" class="register-btn">
-          <span class="register-icon">&#x21B5;</span> Register
+          <span class="register-icon">&#x27A1;</span> Register
         </button>
       </div>
     </form>
