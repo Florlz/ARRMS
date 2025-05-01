@@ -135,9 +135,9 @@
                         <option>College of Arts and Sciences</option>
                         <option>College of Business and Management</option>
                         <option>College of Computer Studies</option>
-                        <option>College of </option>
-                        <option>College of Business and Management</option>
-                        <option>College of Business and Management</option>
+                        <option>College of Business Management </option>
+                        <option>College of Technological and Developmental Education </option>
+                        <option>College of Health and Sciences</option>
                         </select>
                 </div>
                 <div class="grid-item form-group">
