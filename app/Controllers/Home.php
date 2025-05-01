@@ -8,4 +8,9 @@ class Home extends BaseController
     {
         return view('welcome_message');
     }
+
+    public function studentView(): string
+    {
+        return view('student_dashboard');
+    }
 }
