@@ -4,7 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class Users extends Model
+class UserModel extends Model
 {
     protected $table            = 'users';
     protected $primaryKey       = 'id';
@@ -12,7 +12,7 @@ class Users extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = [];
+    protected $allowedFields    = ["student_id", "password"];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;

@@ -27,7 +27,7 @@
             </div>
         </form>
         <div style="margin-top: 18px; text-align: center;">
-            <a href="<?= base_url('register_user') ?>" class="register-link-btn">Register here for ARRMS</a>
+            <a href="<?= base_url('register') ?>" class="register-link-btn">Register here for ARRMS</a>
         </div>
         <div class="academic-footer">
             &copy; <?php echo date('Y'); ?> ARRMS | For academic use only
