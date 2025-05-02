@@ -45,16 +45,15 @@ body {
     text-shadow: 0 2px 8px rgba(46, 74, 125, 0.08);
 }
 form {
-    margin-top: 18px
+    margin-top: 18px;
 }
 .form-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 28px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 2 equal columns */
+    gap: 29px; /* spacing between items */
     margin-bottom: 28px;
 }
 .form-group {
-    flex: 1;
     display: flex;
     flex-direction: column;
     min-width: 200px;
@@ -122,13 +121,26 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .register-icon {
     font-size: 1.2em;
 }
+.municipality-container,
+.admission-container {
+    background: rgba(46, 74, 125, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(46, 74, 125, 0.1);
+    margin-bottom: 20px;
+}
+.municipality-container label,
+.admission-container label {
+    font-weight: bold;
+    color: #bfc8e6;
+}
 @media (max-width: 950px) {
     .container {
         width: 99vw;
         padding: 0 2vw 20px 2vw;
     }
     .form-row {
-        flex-direction: column;
+        grid-template-columns: 1fr; /* Single column for smaller screens */
         gap: 18px;
     }
 }

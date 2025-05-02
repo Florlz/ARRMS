@@ -11,7 +11,7 @@
   <div class="container">
     <div class="header">
       <div class="header-icon">🗔</div>
-      <span class="header-title">APPLY</span>
+      <span class="header-title">REGISTER</span>
     </div>
     <form autocomplete="off">
       <div class="form-row">
@@ -70,12 +70,27 @@
           <input type="text" id="mobile" name="mobile">
         </div>
         <div class="form-group">
+          <label for="zipcode">Zip Code</label>
+          <input type="text" id="zipcode" name="zipcode">
+        </div>
+        <div class="form-group">
+          <label for="admission">Type of Admission</label>
+          <select id="admission" name="admission">
+            <option>Freshman</option>
+            <option>Transferee</option>
+            <option>Second Degree</option>
+            <option>Cross-Enrollee</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
           <label for="street">Street/Barangay</label>
           <input type="text" id="street" name="street">
         </div>
         <div class="form-group">
-          <label for="zipcode">Zip Code</label>
-          <input type="text" id="zipcode" name="zipcode">
+          <label for="municipality">Municipality</label>
+          <input type="text" id="municipality" name="municipality">
         </div>
       </div>
       <div class="register-btn-row">
