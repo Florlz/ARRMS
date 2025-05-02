@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Forgot ID Number Registration</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="<?= base_url('css/register_css.css') ?>">
+  <link rel="stylesheet" href="<?= base_url('css/forgot_css.css') ?>">
 </head>
 <body>
   <div class="container">
