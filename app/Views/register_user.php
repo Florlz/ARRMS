@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <title>APPLY - Registration Form</title>
   <meta name="viewport" content="width=900">
-  // nilipat ko norman sa public/css folder 
+  <link rel="stylesheet" href="<?= base_url('css/register_css.css') ?>">
+  <!--nilipat ko norman sa public/css folder -->
 </head>
 <body>
   <div class="container">
