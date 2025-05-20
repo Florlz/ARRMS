@@ -148,3 +148,22 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 ::-moz-placeholder { color: #bfc8e6; opacity: 1; }
 :-ms-input-placeholder { color: #bfc8e6; opacity: 1; }
 ::placeholder { color: #bfc8e6; opacity: 1; }
+
+.generate-id-btn {
+    margin-top: 8px;
+    padding: 7px 14px;
+    background: #fff;
+    color: #2e4a7d;
+    border: 1.5px solid #2e4a7d;
+    border-radius: 4px;
+    font-size: 0.95em;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+    margin-left: 0;
+    display: block;
+}
+.generate-id-btn:hover {
+    background: #2e4a7d;
+    color: #fff;
+}

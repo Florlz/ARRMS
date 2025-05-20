@@ -7,19 +7,25 @@ body {
 
 .container {
     display: flex;
+    min-height: 100vh; /* Ensures container takes full viewport height */
 }
 
 .sidebar {
-    width: 230px;
-    background-color: #0c1c52;;
-    box-shadow: 2px 0 5px rgba(0,0,0,0.05);
-    padding: 20px;
+    width: 270px; /* Increased width for better content fit */
+    min-width: 220px;
+    max-width: 320px;
+    background-color: #0c1c52;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05);
+    padding: 24px 18px 24px 18px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     border-top-right-radius: 16px;
     border-bottom-right-radius: 16px;
-    height: 94vh;
+    height: 100vh; /* Always full height of viewport */
+    box-sizing: border-box;
+    position: sticky;
+    top: 0;
 }
 
 .sidebar img {
@@ -83,7 +89,7 @@ body {
     background-color: #ffffff;
     border-radius: 16px;
     padding: 30px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     max-width: 900px;
     margin: auto;
 }
@@ -141,4 +147,142 @@ body {
 .btn-save {
     background-color: #ffa64d;
     color: white;
+}
+
+/* Simple modal styling */
+.modal-bg {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: #fff;
+    color: #222;
+    padding: 24px 32px;
+    border-radius: 8px;
+    text-align: center;
+    min-width: 300px;
+}
+
+.modal-content button {
+    margin-top: 18px;
+    padding: 8px 24px;
+    border: none;
+    background: #2e4a7d;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.modal-content button:hover {
+    background: #1a2d4d;
+}
+
+.profile-row {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #f0f0f0;
+    font-size: 16px;
+    transition: background 0.2s;
+}
+
+.profile-row strong {
+    width: 200px;
+    color: #2e4a7d;
+    font-weight: 600;
+    font-size: 15px;
+    flex-shrink: 0;
+}
+
+.profile-row:last-child {
+    border-bottom: none;
+}
+
+#profileDisplay {
+    margin-bottom: 24px;
+    background: #f7f9ff;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(46,74,125,0.04);
+    padding: 18px 24px;
+}
+
+#editProfileForm {
+    background: #f7f9ff;
+    border-radius: 10px;
+    box-shadow: 0 1px 4px rgba(46,74,125,0.04);
+    padding: 18px 24px;
+    margin-bottom: 16px;
+}
+
+#editProfileForm .form-row {
+    gap: 40px;
+    margin-right: 20px;
+}
+
+#editProfileForm .form-group label {
+    color: #2e4a7d;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+#editProfileForm .form-group input {
+    background: #fff;
+    border: 1.5px solid #bfc8e6;
+    color: #222;
+    font-size: 15px;
+    border-radius: 7px;
+    padding: 9px 12px;
+    margin-bottom: 2px;
+    transition: border 0.2s;
+}
+
+#editProfileForm .form-group input:focus {
+    border: 1.5px solid #2e4a7d;
+    outline: none;
+    background: #eef3fb;
+}
+
+.button-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.btn-save {
+    background: #2e4a7d;
+    color: #fff;
+    border: none;
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 7px;
+    transition: background 0.2s;
+}
+
+.btn-save:hover {
+    background: #1a2d4d;
+}
+
+.btn-discard {
+    background: #fff;
+    color: #2e4a7d;
+    border: 1.5px solid #2e4a7d;
+    font-weight: 600;
+    padding: 10px 24px;
+    border-radius: 7px;
+    transition: background 0.2s, color 0.2s;
+}
+
+.btn-discard:hover {
+    background: #2e4a7d;
+    color: #fff;
 }
