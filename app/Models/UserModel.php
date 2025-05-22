@@ -19,6 +19,8 @@ class UserModel extends Model
         "last_name",
         "middle_name",
         "college",
+        "year_enrolled", // Added
+        "year_graduated", // Added
         "date_graduated",
         "birthdate",
         "birthplace",

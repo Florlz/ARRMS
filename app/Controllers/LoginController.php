@@ -4,7 +4,8 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use CodeIgniter\HTTP\ResponseInterface;
-use App\Models\UserModel; 
+use App\Models\UserModel;
+use App\Models\AdminModel;
 
 class LoginController extends BaseController
 {
@@ -12,6 +13,11 @@ class LoginController extends BaseController
     {
         $studentId = $this->request->getPost('student_id');
         $password = $this->request->getPost('password');
+
+        // Check if this is an admin login attempt
+        if ($studentId === 'admin') {
+            return $this->authenticateAdmin($password);
+        }
 
         // Load the User model
         $userModel = new UserModel();
@@ -43,7 +49,8 @@ class LoginController extends BaseController
                 'municipality'      => $user['municipality'],
                 'province'          => $user['province'] ?? null,
                 'region'            => $user['region'] ?? null,
-                'isLoggedIn'        => true
+                'isLoggedIn'        => true,
+                'isAdmin'           => false
             ]);
             // Authentication successful
             return redirect()->to('/student')->with('success', 'Login successful');
@@ -51,5 +58,36 @@ class LoginController extends BaseController
             // Authentication failed
             return redirect()->back()->with('error', 'Invalid student ID or password');
         }
+    }
+
+    private function authenticateAdmin($password)
+    {
+        // For demonstration purposes, using a simple admin auth
+        // In production, you should use a proper admin model with secure password hashing
+        if ($password === 'admin123') {
+            $session = session();
+            $session->set([
+                'admin_id'   => 'admin',
+                'isLoggedIn' => true,
+                'isAdmin'    => true
+            ]);
+            
+            return redirect()->to('/admin')->with('success', 'Admin login successful');
+        }
+        
+        return redirect()->back()->with('error', 'Invalid admin credentials');
+    }
+
+    public function logout()
+    {
+        $session = session();
+        $isAdmin = $session->get('isAdmin');
+        $session->destroy();
+        
+        if ($isAdmin) {
+            return redirect()->to('/')->with('success', 'Admin logged out successfully.');
+        }
+        
+        return redirect()->to('/')->with('success', 'You have been logged out.');
     }
 }
