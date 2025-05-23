@@ -90,7 +90,7 @@
           <input type="text" id="bplace" name="bplace" value="<?= old('bplace') ?>">
         </div>
         <div class="form-group">
-          <label for="cspcemail">CSPC Email Address</label>
+          <label for="cspcemail">Email Address</label>
           <input type="email" id="cspcemail" name="cspcemail" value="<?= old('cspcemail') ?>">
         </div>
       </div>

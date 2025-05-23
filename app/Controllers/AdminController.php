@@ -257,7 +257,7 @@ class AdminController extends BaseController
         $builder = $requestModel->builder();
         
         // Join with users table to get user info
-        $builder->select('document_requests.*, users.first_name, users.last_name, users.student_id as student_number, users.college, document_types.document_name, document_types.processing_days')
+        $builder->select('document_requests.*, users.first_name, users.last_name, users.student_id as student_number, users.college,users.email_address, document_types.document_name, document_types.processing_days')
                 ->join('users', 'users.student_id = document_requests.student_id')
                 ->join('document_types', 'document_types.type_id = document_requests.type_id');
         

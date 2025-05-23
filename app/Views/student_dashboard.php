@@ -37,7 +37,7 @@
 
     <div class="main-content">
         <div class="dashboard-header">
-            <h1>Student Dashboard</h1>
+            <h1>Alumnus Dashboard</h1>
             <div id="pickupNotificationContainer" style="position: absolute; top: 20px; right: 20px; z-index: 1000;"></div>
             <div class="date-time"><?= date('F d, Y') ?></div>
         </div>

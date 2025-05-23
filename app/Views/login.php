@@ -6,7 +6,25 @@
     <title>Login | ARRMS</title>
     <link rel="stylesheet" href="<?= base_url('css/login_css.css') ?>">
 </head>
-<body><div class="login-container">
+<body>
+    <?php if(session()->getFlashdata('success')): ?>
+    <div id="successModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="document.getElementById('successModal').style.display='none'">&times;</span>
+            <div class="modal-header">
+                <h2>Success!</h2>
+            </div>
+            <div class="modal-body">
+                <p><?= session()->getFlashdata('success') ?></p>
+            </div>
+            <div class="modal-footer">
+                <button class="ok-btn" onclick="document.getElementById('successModal').style.display='none'">OK</button>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <div class="login-container">
         <div class="academic-header">
             <img src="https://cdn-icons-png.flaticon.com/512/3135/3135755.png" alt="Academic Logo" class="academic-logo">
             <div class="academic-title">Alumnus Records & Registration</div>
@@ -61,6 +79,11 @@
         document.addEventListener('DOMContentLoaded', function() {
             const tabs = document.querySelectorAll('.tab-item');
             const tabContents = document.querySelectorAll('.tab-content');
+            
+            <?php if(session()->getFlashdata('success')): ?>
+            // Show the modal if a success message exists
+            document.getElementById('successModal').style.display = 'block';
+            <?php endif; ?>
             
             tabs.forEach(tab => {
                 tab.addEventListener('click', function() {
