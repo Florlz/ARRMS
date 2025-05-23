@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\UserModel;
+use Config\Email as EmailConfig; // Import Email Config
 
 class RegisterController extends BaseController
 {
@@ -14,7 +15,8 @@ class RegisterController extends BaseController
 
     public function store()
     {
-        helper(['form']);
+        helper(['form', 'text']); // Add 'text' helper for random_string
+        $session = session();
 
         $validationRules = [
             'idnum'        => 'required|numeric|exact_length[9]|is_unique[users.student_id]',
@@ -75,6 +77,9 @@ class RegisterController extends BaseController
         ];
 
         if (!$this->validate($validationRules, $validationMessages)) {
+            if ($this->request->isAJAX()) {
+                return $this->response->setJSON(['status' => 'error', 'errors' => $this->validator->getErrors()]);
+            }
             return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
         }
 
@@ -83,14 +88,15 @@ class RegisterController extends BaseController
         $yearGraduated = $this->request->getPost('year_graduated');
         
         if (!empty($yearGraduated) && $yearGraduated < $yearEnrolled) {
+            if ($this->request->isAJAX()) {
+                return $this->response->setJSON(['status' => 'error', 'message' => 'Graduation year cannot be earlier than enrollment year.']);
+            }
             return redirect()->back()->withInput()->with('error', 'Graduation year cannot be earlier than enrollment year.');
         }
 
-        $userModel = new UserModel();
-
-        $data = [
+        $userData = [
             'student_id'        => $this->request->getPost('idnum'),
-            'password'          => $this->request->getPost('password'),
+            'password'          => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT), // Hash password
             'first_name'        => $this->request->getPost('fname'),
             'last_name'         => $this->request->getPost('lname'),
             'middle_name'       => $this->request->getPost('mname'),
@@ -106,11 +112,123 @@ class RegisterController extends BaseController
             'province'          => $this->request->getPost('province'),
             'municipality'      => $this->request->getPost('municipality'),
             'year_enrolled'     => $this->request->getPost('year_enrolled'),
-            'year_graduated'    => $this->request->getPost('year_graduated') ?: null, // Store null if empty
+            'year_graduated'    => $this->request->getPost('year_graduated') ?: null,
         ];
 
-        $userModel->insert($data);
+        $verificationCode = random_string('numeric', 6);
 
-        return redirect()->to('/')->with('success', 'Registration successful. Please login.');
+        // Store data in session
+        $session->set('registration_data', $userData);
+        $session->set('verification_code', $verificationCode);
+        $session->set('verification_email', $userData['email_address']);
+
+        // Send verification email
+        if ($this->_sendVerificationEmail($userData['email_address'], $verificationCode)) {
+            if ($this->request->isAJAX()) {
+                return $this->response->setJSON(['status' => 'success', 'message' => 'Verification code sent to your email.']);
+            }
+            return redirect()->to('/verify-email')->with('success', 'Verification code sent to your email.');
+        } else {
+            if ($this->request->isAJAX()) {
+                return $this->response->setJSON(['status' => 'error', 'message' => 'Failed to send verification email.']);
+            }
+            return redirect()->back()->withInput()->with('error', 'Failed to send verification email.');
+        }
+    }
+
+    public function showVerifyForm()
+    {
+        return view('verify_email_form'); // You need to create this view
+    }
+
+    public function verifyEmail()
+    {
+        helper(['form']);
+        $session = session();
+
+        $rules = [
+            'verification_code' => 'required|exact_length[6]|numeric'
+        ];
+
+        $messages = [
+            'verification_code' => [
+                'required' => 'Verification code is required.',
+                'exact_length' => 'Verification code must be 6 digits.',
+                'numeric' => 'Verification code must be numeric.'
+            ]
+        ];
+
+        if (!$this->validate($rules, $messages)) {
+            if ($this->request->isAJAX()) {
+                return $this->response->setJSON(['status' => 'error', 'errors' => $this->validator->getErrors()]);
+            }
+            return redirect()->back()->withInput()->with('errors', $this->validator->getErrors());
+        }
+
+        $enteredCode = $this->request->getPost('verification_code');
+        $storedCode = $session->get('verification_code');
+        $registrationData = $session->get('registration_data');
+        $verificationEmail = $session->get('verification_email');
+
+        if (!$storedCode || !$registrationData || !$verificationEmail) {
+            if ($this->request->isAJAX()) {
+                return $this->response->setJSON(['status' => 'error', 'message' => 'Session expired or invalid request. Please try registering again.']);
+            }
+            return redirect()->to('/register')->with('error', 'Session expired or invalid request. Please try registering again.');
+        }
+
+        if ($enteredCode === $storedCode) {
+            $userModel = new UserModel();
+            if ($userModel->insert($registrationData)) {
+                // Clear session data
+                $session->remove(['registration_data', 'verification_code', 'verification_email']);
+                if ($this->request->isAJAX()) {
+                    return $this->response->setJSON(['status' => 'success', 'message' => 'Email verified and registration successful. Please login.']);
+                }
+                return redirect()->to('/login')->with('success', 'Email verified and registration successful. Please login.');
+            } else {
+                if ($this->request->isAJAX()) {
+                    return $this->response->setJSON(['status' => 'error', 'message' => 'Failed to save user data. Please try again.']);
+                }
+                return redirect()->to('/register')->with('error', 'Failed to save user data. Please try again.');
+            }
+        } else {
+            if ($this->request->isAJAX()) {
+                return $this->response->setJSON(['status' => 'error', 'message' => 'Invalid verification code.']);
+            }
+            return redirect()->back()->withInput()->with('error', 'Invalid verification code.');
+        }
+    }
+
+    private function _sendVerificationEmail($to, $code)
+    {
+        $email = \Config\Services::email(); // Corrected line: removed extra backslash
+        $emailConfig = new EmailConfig(); // Load the email config
+
+        // Configuration is now primarily handled by app/Config/Email.php
+        // The following are examples and might not be needed if Email.php is fully set up.
+        /*
+        $email->SMTPHost = 'smtp.gmail.com';
+        $email->SMTPUser = 'your_email@gmail.com';
+        $email->SMTPPass = 'your_gmail_password_or_app_password';
+        $email->SMTPPort = 465; // Or 587 for TLS
+        $email->SMTPCrypto = 'ssl'; // Or 'tls'
+        $email->protocol = 'smtp';
+        $email->mailType = 'html';
+        $email->charset = 'utf-8';
+        $email->newline = "\r\n";
+        */
+
+        $email->setTo($to);
+        $email->setFrom($emailConfig->fromEmail, $emailConfig->fromName); // Use configured from email and name
+        $email->setSubject('Email Verification Code');
+        $email->setMessage("Your verification code is: <h1>{$code}</h1>");
+
+        if ($email->send()) {
+            return true;
+        } else {
+            log_message('error', $email->printDebugger(['headers'])); // Log error for debugging
+            return false;
+        }
     }
 }

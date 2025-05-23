@@ -29,7 +29,8 @@ class LoginController extends BaseController
             return redirect()->back()->with('error', 'Invalid student ID or password');
         }
         
-        if ($password === $user['password']) {
+        // Verify the password
+        if (password_verify($password, $user['password'])) {
             // Set all user details in session
             $session = session();
             $session->set([

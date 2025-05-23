@@ -7,8 +7,13 @@ use CodeIgniter\Router\RouteCollection;
  */
 $routes->get('/', 'Home::index');
 $routes->get('/student', 'Home::studentView');
+
+// Registration and Verification Routes
 $routes->get('/register', 'RegisterController::index');
-$routes->post('/register/store', 'RegisterController::store');
+$routes->post('/register/store', 'RegisterController::store'); // Handles initial registration and sending code
+$routes->get('/verify-email', 'RegisterController::showVerifyForm'); // Optional: A page to manually enter code if modal fails or for direct access
+$routes->post('/register/verify-email', 'RegisterController::verifyEmail'); // Handles the code verification AJAX request
+
 $routes->get('/forgot', 'Home::forgotRegister');
 $routes->post('/login/authenticate', 'LoginController::authenticate');
 $routes->post('student/update', 'StudentController::update');

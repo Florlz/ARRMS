@@ -7,20 +7,96 @@
   <meta name="viewport" content="width=900">
   <link rel="stylesheet" href="<?= base_url('css/register_css.css') ?>">
   <!--nilipat ko norman sa public/css folder -->
+  <style>
+    /* Basic styling for the modal */
+    .modal {
+      display: none;
+      /* Hidden by default */
+      position: fixed;
+      /* Stay in place */
+      z-index: 1000;
+      /* Sit on top */
+      left: 0;
+      top: 0;
+      width: 100%;
+      /* Full width */
+      height: 100%;
+      /* Full height */
+      overflow: auto;
+      /* Enable scroll if needed */
+      background-color: rgb(0, 0, 0);
+      /* Fallback color */
+      background-color: rgba(0, 0, 0, 0.4);
+      /* Black w/ opacity */
+      padding-top: 60px;
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 5% auto;
+      /* 15% from the top and centered */
+      padding: 20px;
+      border: 1px solid #888;
+      width: 80%;
+      /* Could be more or less, depending on screen size */
+      max-width: 400px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .modal-content h2 {
+      margin-top: 0;
+    }
+
+    .modal-content input[type="text"] {
+      width: calc(100% - 22px);
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+
+    .modal-content button {
+      background-color: #4caf50;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .modal-content button:hover {
+      background-color: #45a049;
+    }
+
+    #verification-message {
+      margin-top: 15px;
+      font-size: 0.9em;
+    }
+
+    .error-message {
+      color: red;
+    }
+
+    .success-message {
+      color: green;
+    }
+  </style>
 </head>
 
-<body>  <div class="container">
+<body>
+  <div class="container">
     <div class="header">
       <div class="header-icon">🗔</div>
       <span class="header-title">REGISTER</span>
     </div>
-    
+
     <?php if(session()->getFlashdata('error')): ?>
     <div class="alert alert-danger">
       <?= session()->getFlashdata('error') ?>
     </div>
     <?php endif; ?>
-    
+
     <?php if(session()->getFlashdata('errors')): ?>
     <div class="alert alert-danger">
       <ul>
@@ -30,8 +106,8 @@
       </ul>
     </div>
     <?php endif; ?>
-    
-    <form action="<?= base_url('register/store') ?>" method="post" autocomplete="off">
+
+    <form id="registrationForm" action="<?= base_url('register/store') ?>" method="post" autocomplete="off">
       <div class="form-row">        <div class="form-group">
           <label for="idnum">ID Number</label>
           <input type="text" id="idnum" name="idnum" value="<?= old('idnum') ?>">
@@ -145,7 +221,20 @@
         </button>
       </div>
     </form>
-  </div>  <script>
+
+    <!-- Verification Modal -->
+    <div id="verificationModal" class="modal">
+      <div class="modal-content">
+        <h2>Verify Your Email</h2>
+        <p>A verification code has been sent to your email address. Please enter it below.</p>
+        <input type="text" id="verification_code" name="verification_code" placeholder="Enter verification code" required>
+        <button type="button" id="verifyCodeButton">Verify</button>
+        <div id="verification-message"></div>
+      </div>
+    </div>
+
+  </div>
+  <script>
     function generateTempID() {
       // Generate a 9-digit numeric ID
       let tempId = '';
@@ -245,16 +334,124 @@
       // Initialize year validation
       validateYearInputs();
       
-      // Add password confirmation validation
-      document.querySelector('form').addEventListener('submit', function(e) {
+      const registrationForm = document.getElementById('registrationForm');
+      const verificationModal = document.getElementById('verificationModal');
+      const verifyCodeButton = document.getElementById('verifyCodeButton');
+      const verificationMessage = document.getElementById('verification-message');
+      const verificationCodeInput = document.getElementById('verification_code');
+
+      registrationForm.addEventListener('submit', async function(e) {
+        e.preventDefault(); // Prevent default form submission
+
         const password = document.getElementById('password').value;
         const confirmPassword = document.getElementById('password_confirm').value;
         
         if (password !== confirmPassword) {
-          e.preventDefault();
           alert('Passwords do not match. Please check and try again.');
+          return;
+        }
+
+        // Clear previous messages
+        const existingAlerts = registrationForm.querySelectorAll('.alert.alert-danger, .alert.alert-success');
+        existingAlerts.forEach(alert => alert.remove());
+        verificationMessage.innerHTML = '';
+
+
+        const formData = new FormData(registrationForm);
+        const submitButton = registrationForm.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<span class="register-icon">Processing...</span>';
+
+        try {
+          const response = await fetch('<?= base_url('register/store') ?>', {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest' // Important for CodeIgniter to detect AJAX
+            }
+          });
+
+          const result = await response.json();
+
+          if (result.status === 'success') {
+            // Show verification modal
+            verificationModal.style.display = 'block';
+            verificationMessage.textContent = result.message;
+            verificationMessage.className = 'success-message';
+          } else if (result.status === 'validation_error') {
+            let errorHtml = '<div class="alert alert-danger"><ul>';
+            for (const field in result.errors) {
+              errorHtml += `<li>${result.errors[field]}</li>`;
+            }
+            errorHtml += '</ul></div>';
+            registrationForm.insertAdjacentHTML('afterbegin', errorHtml);
+          } else {
+            // General error
+            let errorHtml = `<div class="alert alert-danger">${result.message || 'An unexpected error occurred.'}</div>`;
+            registrationForm.insertAdjacentHTML('afterbegin', errorHtml);
+          }
+        } catch (error) {
+          console.error('Error submitting registration form:', error);
+          let errorHtml = `<div class="alert alert-danger">An error occurred while submitting the form. Please try again.</div>`;
+          registrationForm.insertAdjacentHTML('afterbegin', errorHtml);
+        } finally {
+            submitButton.disabled = false;
+            submitButton.innerHTML = '<span class="register-icon">&#x27A1;</span> Register';
         }
       });
+
+      verifyCodeButton.addEventListener('click', async function() {
+        const code = verificationCodeInput.value;
+        if (!code) {
+          verificationMessage.textContent = 'Please enter the verification code.';
+          verificationMessage.className = 'error-message';
+          return;
+        }
+
+        verificationMessage.textContent = 'Verifying...';
+        verificationMessage.className = '';
+        verifyCodeButton.disabled = true;
+
+        const formData = new FormData();
+        formData.append('verification_code', code);
+        // We might need to send the email if your controller needs it, 
+        // but it should be in the session on the server-side.
+        // formData.append('email', document.getElementById('cspcemail').value);
+
+
+        try {
+          const response = await fetch('<?= base_url('register/verify-email') ?>', {
+            method: 'POST',
+            body: formData,
+            headers: {
+              'X-Requested-With': 'XMLHttpRequest'
+            }
+          });
+
+          const result = await response.json();
+
+          if (result.status === 'success') {
+            verificationMessage.textContent = result.message;
+            verificationMessage.className = 'success-message';
+            // Optionally, close modal and redirect or update UI
+            setTimeout(() => {
+              verificationModal.style.display = 'none';
+              // Redirect to login or a success page
+              window.location.href = '<?= base_url('/') ?>?verified=true'; // Adjust as needed
+            }, 2000); // Wait 2 seconds before redirecting
+          } else {
+            verificationMessage.textContent = result.message || 'An error occurred during verification.';
+            verificationMessage.className = 'error-message';
+          }
+        } catch (error) {
+          console.error('Error verifying code:', error);
+          verificationMessage.textContent = 'An error occurred. Please try again.';
+          verificationMessage.className = 'error-message';
+        } finally {
+            verifyCodeButton.disabled = false;
+        }
+      });
+      
       // Load regions
       fetch('<?= base_url('phjson/regions.json') ?>')
         .then(res => res.json())
